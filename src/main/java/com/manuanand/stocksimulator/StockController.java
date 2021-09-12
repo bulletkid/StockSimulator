@@ -27,7 +27,6 @@ public class StockController {
 	public @ResponseBody Stock addStock (
 			@RequestParam String ticker, @RequestParam Double price) {
 		
-
 		Stock newStock = new Stock();
 		newStock.setTicker(ticker);
 		newStock.setPrice(price);
@@ -38,8 +37,8 @@ public class StockController {
 		return newStock;
 	}
 	
-	@PostMapping(path="/adjust") // Map ONLY POST Requests
-	public @ResponseBody void adjustStocks () {
+	@GetMapping(path="/adjust") // Map ONLY POST Requests
+	public @ResponseBody Iterable<Stock> adjustStocks () {
 
 		Iterable<Stock> stocks = stockRepository.findAll();
 		
@@ -59,8 +58,11 @@ public class StockController {
 			stock.setPrice(newPrice);
 			stock.setLastUpdated(new Date());
 			
+			System.out.println("Adjusting price of " +stock.getTicker()+ " from " + price + " to " + newPrice);
 			stockRepository.save(stock);
 		}
+		
+		return stockRepository.findAll();
 	}
 	
 	@GetMapping(path="/")

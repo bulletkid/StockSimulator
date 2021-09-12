@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,7 +50,7 @@ public class UserController {
 		return newUser;
 	}
 
-	@PostMapping(path="/user/buy") // Map ONLY POST Requests
+	@PostMapping(path="/buy") // Map ONLY POST Requests
 	public @ResponseBody Trade buyStocks (@RequestParam Integer userId, @RequestParam String password,
 					@RequestParam Integer stockId, @RequestParam Integer quantity) {
 		
@@ -67,7 +68,7 @@ public class UserController {
 					  HttpStatus.NOT_FOUND, "User with ID" + userId + " not found");
 		}
 		
-		if (!user.get().getPassword().equalsIgnoreCase(password)) {
+		if ( (user.get().getPassword() == null) || !user.get().getPassword().equalsIgnoreCase(password)) {
 			throw new ResponseStatusException(
 					  HttpStatus.BAD_REQUEST, "Password mismatched for User: " + userId);
 		}
@@ -108,7 +109,7 @@ public class UserController {
 		return trade;
 	}
 
-	@PostMapping(path="/user/sell") // Map ONLY POST Requests
+	@PostMapping(path="/sell") // Map ONLY POST Requests
 	public @ResponseBody Trade sellStocks (@RequestParam Integer userId, @RequestParam String password,
 			@RequestParam Integer portfolioId, @RequestParam Integer quantity) {
 		
